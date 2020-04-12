@@ -32,10 +32,20 @@ defined( 'ABSPATH' ) or die('Hey, you can\'t access this file');
 
 class FerdroidPlugin 
 {
+    // private
+    // solo puede ser accedida desde la misma clase
+
+    // public
+    // puede ser accedido desde cualquier parte
+
+    // protected
+    // puede ser accedido desde la misma clase o de sus clases heredadas
+
 
     function __construct()
     {
-        add_action('init', [ $this, 'custom_post_type' ]);
+        $this->print_more_stuff();
+        $this->print_stuff();
     }
 
     function register() {
@@ -58,6 +68,14 @@ class FerdroidPlugin
         
     // }
 
+    protected function create_post_type() {
+        add_action('init', [ $this, 'custom_post_type' ]);
+    }
+
+    protected function print_stuff() {
+        var_dump(['testing']);
+    }
+
     function custom_post_type() {
         register_post_type('book', ['public' => true, 'label' => 'Books']);
     }
@@ -68,11 +86,25 @@ class FerdroidPlugin
         wp_enqueue_script( 'mypluginscript', plugins_url('/assets/myscript.js', __FILE__) );
     }
 
+    private function print_more_stuff() {
+        echo "Test private function";
+    }
 }
+
+class SecondClass extends FerdroidPlugin {
+
+    function register_post_type() {
+        $this->create_post_type();
+    }
+}
+
 
 if ( class_exists('FerdroidPlugin') ) {
     $ferdroidPlugin = new FerdroidPlugin();
     $ferdroidPlugin->register();
+
+    $secondClass = new SecondClass();
+    $secondClass->register_post_type();
 }
 
 
