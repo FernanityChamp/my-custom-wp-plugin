@@ -38,6 +38,12 @@ class FerdroidPlugin
         add_action('init', [ $this, 'custom_post_type' ]);
     }
 
+    function register() {
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue' ] );
+        // wp_ agrega el script al frontend
+        // admin_ agrega el script al backend
+    }
+
     function activate() {
         $this->custom_post_type();
         flush_rewrite_rules();
@@ -48,18 +54,25 @@ class FerdroidPlugin
         flush_rewrite_rules();
     }
 
-    function uninstall() {
+    // function uninstall() {
         
-    }
+    // }
 
     function custom_post_type() {
         register_post_type('book', ['public' => true, 'label' => 'Books']);
+    }
+
+    function enqueue() {
+        // añadir todos los assets (css, js)
+        wp_enqueue_style( 'mypluginstyle', plugins_url('/assets/mystyle.css', __FILE__) );
+        wp_enqueue_script( 'mypluginscript', plugins_url('/assets/myscript.js', __FILE__) );
     }
 
 }
 
 if ( class_exists('FerdroidPlugin') ) {
     $ferdroidPlugin = new FerdroidPlugin();
+    $ferdroidPlugin->register();
 }
 
 
@@ -70,4 +83,5 @@ register_activation_hook( __FILE__, array($ferdroidPlugin, 'activate') );
 register_deactivation_hook( __FILE__, [ $ferdroidPlugin, 'deactivate' ] );
 
 // uninstall
+// register_uninstall_hook( __FILE__, [ $ferdroidPlugin, 'uninstall' ]);
 
