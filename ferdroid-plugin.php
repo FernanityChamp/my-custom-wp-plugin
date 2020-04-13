@@ -22,6 +22,13 @@ Disclaimer of the License
 //     die;
 // }
 
+if ( ! file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
+    die(' No autoload file. Remember you must run composer install');
+}
+
+require_once dirname( __FILE__ ) . '/vendor/autoload.php';
+
+
 defined( 'ABSPATH' ) or die('Hey, you can\'t access this file');
 
 // if ( ! function_exists( 'add_action') ) {
@@ -29,6 +36,10 @@ defined( 'ABSPATH' ) or die('Hey, you can\'t access this file');
 //     exit;
 // }
 
+
+use Inc\Activate;
+use Inc\Deactivate;
+use Inc\Admin\AdminPage;
 
 class FerdroidPlugin 
 {
@@ -99,10 +110,10 @@ class FerdroidPlugin
     // }
 
 
-    // function activate() {
-    //     require_once plugin_dir_path( __FILE__ ) . 'inc/ferdroid-plugin-activate.php';        
-    //     FerdroidPluginActivate::activate();
-    // }
+    function activate() {
+        // require_once plugin_dir_path( __FILE__ ) . 'inc/ferdroid-plugin-activate.php';
+        Activate::activate();
+    }
 
 
     protected function create_post_type() {
@@ -148,13 +159,13 @@ if ( class_exists('FerdroidPlugin') ) {
 
 
 // activation
-require_once plugin_dir_path( __FILE__ ) . 'inc/ferdroid-plugin-activate.php';
-register_activation_hook( __FILE__, array( 'FerdroidPluginActivate', 'activate') );
-// register_activation_hook( __FILE__, array( $ferdroidPlugin, 'activate') );
+// require_once plugin_dir_path( __FILE__ ) . 'inc/ferdroid-plugin-activate.php';
+// register_activation_hook( __FILE__, array( 'FerdroidPluginActivate', 'activate') );
+register_activation_hook( __FILE__, array( $ferdroidPlugin, 'activate') );
 
 // deactivation
-require_once plugin_dir_path( __FILE__ ) . 'inc/ferdroid-plugin-deactivate.php';
-register_deactivation_hook( __FILE__, [ 'FerdroidPluginDeactivate', 'deactivate' ] );
+// require_once plugin_dir_path( __FILE__ ) . 'inc/ferdroid-plugin-deactivate.php';
+register_deactivation_hook( __FILE__, [ 'Deactivate', 'deactivate' ] );
 
 // uninstall
 // register_uninstall_hook( __FILE__, [ $ferdroidPlugin, 'uninstall' ]);
