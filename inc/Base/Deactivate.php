@@ -3,7 +3,7 @@
  * @package FerdroidPlugin
  */
 
-namespace Inc;
+namespace Inc\Base;
 
 class Deactivate 
 {
